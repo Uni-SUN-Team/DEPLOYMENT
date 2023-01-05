@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: pgadmin-dev
+  name: pgadmin-dev
+  namespace: database-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin-dev
+  template:
+    metadata:
+      labels:
+        app: pgadmin-dev
+    spec:
+      containers:
+      - image: dpage/pgadmin4:latest
+        imagePullPolicy: Always
+        name: pgadmin
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+          requests:
+            memory: "500Mi"
+            cpu: "500m"
+        env:
+        - name: PGADMIN_DEFAULT_EMAIL
+          value: "NarawichSaphimarn@gmail.com"
+        - name: PGADMIN_DEFAULT_PASSWORD
+          value: "Gku2gQxz6U"
+        - name: PGADMIN_PORT
+          value: "80"
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP

@@ -1,0 +1,9 @@
+$ kubectl create namespace devops-tools
+$ kubectl create namespace database-dev
+$ kubectl create namespace database-sit
+$ kubectl create namespace database-uat
+$ kubectl create namespace database-prd
+$ kubectl create namespace unisun-dev
+$ kubectl create namespace unisun-sit
+$ kubectl create namespace unisun-uat
+$ kubectl create namespace unisun-prd

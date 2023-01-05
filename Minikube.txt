@@ -1,0 +1,4 @@
+--- MY PC machine
+$ minikube start --cpus='6' --namespace='unisun' --driver=docker --container-runtime='docker' --dns-domain='cluster.unisun' --memory='13900MB' --force
+$ minikube dashboard --url
+$ minikube tunnel --bind-address='192.168.161.162'

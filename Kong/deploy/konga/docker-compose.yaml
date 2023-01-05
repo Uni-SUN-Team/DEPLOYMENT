@@ -1,0 +1,21 @@
+version: "3.5"
+
+services:
+  konga:
+    image: "pantsel/konga"
+    container_name: "konga"
+    networks:
+      - kong
+    environment:
+      - TOKEN_SECRET=907beb15-4570-42ea-81d4-869de8d80ba3
+      - DB_ADAPTER=postgres
+      - DB_URI=fpostgresql://kong:kong@kong-database:5432/konga
+      - NODE_ENV=production
+    ports:
+      - "1337:1337"
+    restart: on-failure
+
+networks:
+  kong:
+    driver: "bridge"
+    name: kong

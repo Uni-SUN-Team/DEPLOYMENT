@@ -1,0 +1,29 @@
+version: "3.5"
+
+services:
+  kong-database:
+    image: "postgres:9.6"
+    container_name: "kong-database"
+    ports:
+      - "5432:5432"
+    networks:
+      - "kong"
+    environment:
+      - POSTGRES_USER=kong
+      - POSTGRES_DB=kong
+      - POSTGRES_PASSWORD=kong
+    restart: on-failure
+
+  kong-cassandra:
+    image: "cassandra:3"
+    container_name: "kong-cassandra"
+    networks:
+      - "kong"
+    ports:
+      - "9042:9042"
+    restart: on-failure
+
+networks:
+  kong:
+    driver: "bridge"
+    name: kong

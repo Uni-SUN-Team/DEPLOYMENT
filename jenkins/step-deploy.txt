@@ -1,0 +1,17 @@
+--- create Namespace
+kubectl create namespace devops-tools
+
+--- deploy ServiceAccount
+kubectl apply -f serviceAccount.yaml
+
+--- create Volume
+kubectl create -f volume.yaml
+
+--- deploy Deployment
+kubectl apply -f deployment.yaml
+
+--- deploy Service
+kubectl apply -f service.yaml
+
+--- deploy Ingress
+kubectl apply -f ingress-jenkins.yaml
