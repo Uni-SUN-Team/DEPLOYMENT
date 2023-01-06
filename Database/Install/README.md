@@ -10,10 +10,10 @@ $ kubectl create namespace database-uat
 $ kubectl create namespace database-prd
 
 ## Step 3 - Install postgrasql to kubernetes:
-$ helm install database-dev my-repo/postgresql -n database-dev --set nodeSelector."beta\.kubernetes\.io/os"=linux
-$ helm install database-sit my-repo/postgresql -n database-sit --set nodeSelector."beta\.kubernetes\.io/os"=linux
-$ helm install database-uat my-repo/postgresql -n database-uat --set nodeSelector."beta\.kubernetes\.io/os"=linux
-$ helm install database-prd my-repo/postgresql -n database-prd --set nodeSelector."beta\.kubernetes\.io/os"=linux
+$ helm install database-dev my-repo/postgresql -n database-dev
+$ helm install database-sit my-repo/postgresql -n database-sit
+$ helm install database-uat my-repo/postgresql -n database-uat
+$ helm install database-prd my-repo/postgresql -n database-prd
 
 ## NOTE - How to check password:
 $ kubectl get secret --namespace database-dev database-dev-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d
