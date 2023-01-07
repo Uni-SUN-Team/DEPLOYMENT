@@ -1,0 +1,7 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  labels:
+    {{- include "kubernetes-dashboard.labels" . | nindent 4 }}
+    k8s-app: {{ .Chart.Name }}
+  name: {{ .Chart.Name }}-settings
