@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Chart.Name }}-pv-claim
+  labels:
+    {{- include "database-dev.labels" . | nindent 4 }}
+spec:
+  storageClassName: {{ .Chart.Name }}-local-storage
+  accessModes:
+    - {{ .Values.persistentvolumeclaim.accessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.persistentvolumeclaim.storage }}

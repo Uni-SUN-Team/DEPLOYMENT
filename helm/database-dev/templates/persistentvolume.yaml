@@ -6,10 +6,17 @@ metadata:
     {{- include "database-dev.labels" . | nindent 4 }}
     type: local
 spec:
-  storageClassName: {{ .Values.persistentvolume.storageClassName }}
+  storageClassName: {{ .Chart.Name }}-local-storage
+  claimRef:
+    name: {{ .Chart.Name }}-pv-claim
+    namespace: {{ .Values.namespace }}
   capacity:
     storage: {{ .Values.persistentvolume.storage }}
   accessModes:
     - {{ .Values.persistentvolume.accessModes }}
   hostPath:
     path: {{ .Values.persistentvolume.path }}
+  {{- with .Values.persistentvolume.nodeAffinity }}
+  nodeAffinity:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}

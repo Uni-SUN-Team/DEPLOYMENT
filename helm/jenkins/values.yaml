@@ -1,14 +1,16 @@
-# Default values for database-dev.
+# Default values for jenkins.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: postgres
+  repository: jenkins/jenkins
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "11"
+  tag: "lts"
+
+namespace: devops-tools
 
 imagePullSecrets: []
 nameOverride: ""
@@ -38,7 +40,7 @@ securityContext: {}
 
 service:
   type: NodePort
-  port: 5432
+  port: 8080
 
 ingress:
   enabled: false
@@ -62,11 +64,11 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    memory: 2Gi
-    cpu: 1000m
+    memory: 1Gi
+    cpu: 600m
   requests:
-    memory: 500Mi
-    cpu: 500m
+    memory: 250Mi
+    cpu: 100m
 
 autoscaling:
   enabled: false
@@ -84,64 +86,37 @@ tolerations:
 
 affinity: {}
 
-secret:
-  db:
-    password: "P@ssw0rd"
+storageclass:
+  provisioner: kubernetes.io/no-provisioner
+  volumeBindingMode: WaitForFirstConsumer
 
 persistentvolume:
-  storageClassName: manual
-  storage: 5Gi
+  storage: 10Gi
   accessModes: ReadWriteOnce
-  path: "/mnt/data"
+  path: /mnt
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - minions-node1.localdomain
 
 persistentvolumeclaim:
-  storageClassName: manual
   accessModes: ReadWriteOnce
-  storage: 1Gi
+  storage: 3Gi
 
-volumes:
-  - name: postgres-pv-storage
-    persistentVolumeClaim:
-      claimName: database-dev-pv-claim
+deployment:
+  volumeMounts:
+    - name: jenkins-data
+      mountPath: /var/jenkins_home
+  volumes:
+    - name: jenkins-data
+      persistentVolumeClaim:
+          claimName: jenkins-pv-claim
+  securityContext:
+    fsGroup: 1000
+    runAsUser: 1000
 
-env:
-  - name: POSTGRES_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: database-dev-secret
-        key: db.password
-  - name: PGDATA
-    value: /var/lib/postgresql/data/pgdata
 
-volumeMounts:
-  - name: postgres-pv-storage
-    mountPath: /var/lib/postgresql/data
-
-livenessProbe:
-  exec:
-    command:
-      - /bin/sh
-      - '-c'
-      - exec pg_isready -U "postgres" -h 127.0.0.1 -p 5432
-  initialDelaySeconds: 30
-  timeoutSeconds: 5
-  periodSeconds: 10
-  successThreshold: 1
-  failureThreshold: 6
-
-readinessProbe:
-  exec:
-    command:
-      - /bin/sh
-      - '-c'
-      - '-e'
-      - >
-        exec pg_isready -U "postgres" -h 127.0.0.1 -p 5432
-
-        [ -f /opt/bitnami/postgresql/tmp/.initialized ] || [ -f
-        /bitnami/postgresql/.initialized ]
-  initialDelaySeconds: 5
-  timeoutSeconds: 5
-  periodSeconds: 10
-  successThreshold: 1
-  failureThreshold: 6

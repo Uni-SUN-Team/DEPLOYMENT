@@ -3,9 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ .Chart.Name }}-pv-claim
   labels:
-    {{- include "database-dev.labels" . | nindent 4 }}
+    {{- include "jenkins.labels" . | nindent 4 }}
 spec:
-  storageClassName: {{ .Values.persistentvolumeclaim.storageClassName }}
+  storageClassName: {{ .Chart.Name }}-local-storage
   accessModes:
     - {{ .Values.persistentvolumeclaim.accessModes }}
   resources:
